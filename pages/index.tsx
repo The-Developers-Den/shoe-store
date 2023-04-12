@@ -3,7 +3,7 @@ import ProductCard from "@/components/ProductCard";
 export default function Home() {
   return (
     <main>
-      <div className="w-full max-w-[1280px] px-5 md:px-10 mx-auto">
+      <div className="w-full max-w-[1280px] px-5 md:px-10 mx-auto ">
         <HeroBanner />
         <div className="text-center max-w-[800px] mx-auto my-[50px] md:my-[80px]">
           <div className="text-[28px] md:text-[34px] mb-5 font-semibold leading-tight">
