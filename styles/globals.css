@@ -9,9 +9,7 @@
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;
-
   color: rgba(0, 0, 0, 1);
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -35,7 +33,7 @@ body::-webkit-scrollbar {
 }
 
 /* PRODUCT DETAILS CAROUSEL STYLING CUSTOMIZATION START */
-/* .productCarousel.carousel-root {
+.productCarousel.carousel-root {
   display: flex;
   flex-direction: row-reverse;
   gap: 15px;
@@ -106,7 +104,7 @@ body::-webkit-scrollbar {
     padding: 0;
     margin: 0;
   }
-} */
+}
 /* PRODUCT DETAILS CAROUSEL STYLING CUSTOMIZATION END */
 
 /* .markdown ul {
