@@ -11,7 +11,7 @@ import { VscChromeClose } from "react-icons/vsc";
 const Header = () => {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [showCatMenu, setShowCatMenu] = useState(false);
-  const [show, setShow] = useState("translate-y-0");
+  const [show, setShow] = useState("translate-y-0yarm");
   const [lastScrollY, setLastScrollY] = useState(0);
   const [categories, setCategories] = useState([
     { id: 1, name: "Jordan", slug: 11 },
