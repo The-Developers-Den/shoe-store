@@ -34,3 +34,17 @@ export interface Product {
   id: number;
   attributes: ProductAttributes;
 }
+export interface Category {
+  id: number;
+  attributes: CategoryAttributes;
+}
+export interface CategoryAttributes {
+  name: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  products: {
+    data: Product[];
+  };
+}

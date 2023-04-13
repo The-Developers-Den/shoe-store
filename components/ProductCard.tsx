@@ -2,15 +2,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { ProductAttributes } from "@/utils/types";
-const ProductCard = ({
-  data: { attributes, id },
-}: {
-  data: {
-    id: string | number | undefined;
-    attributes: ProductAttributes;
-  };
-}) => {
+import { Category, Product } from "@/utils/types";
+import { getDiscountedPricePercentage } from "@/utils/helper";
+
+const ProductCard = ({ data }: { data: Product }) => {
   return (
     <Link
       href={`/product/1`}
@@ -19,26 +14,29 @@ const ProductCard = ({
       <Image
         width={500}
         height={500}
-        src={attributes.thumbnail.data.attributes.url}
-        alt={attributes.name}
+        src={data?.attributes.thumbnail.data.attributes.url}
+        alt={data?.attributes.name}
       />
       <div className="p-4 text-black/[0.9]">
-        <h2 className="text-lg font-medium">{attributes.name}</h2>
+        <h2 className="text-lg font-medium">{data?.attributes.name}</h2>
         <div className="flex items-center text-black/[0.5]">
           <p className="mr-2 text-lg font-semibold">
             &#8377;
-            {attributes.price}
+            {data?.attributes.price}
           </p>
 
-          {attributes.original_price && (
+          {data?.attributes.original_price && (
             <>
               <p className="text-base  font-medium line-through">
                 &#8377;
-                {attributes.original_price}
+                {data?.attributes.original_price}
               </p>
               <p className="ml-auto text-base font-medium text-green-500">
-                30% off
-                {/* {getDiscountedPricePercentage(p.original_price, p.price)}% off */}
+                {getDiscountedPricePercentage(
+                  data?.attributes.original_price,
+                  data?.attributes.price
+                )}
+                % off
               </p>
             </>
           )}

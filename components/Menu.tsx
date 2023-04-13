@@ -1,19 +1,13 @@
 import React from "react";
 import Link from "next/link";
 import { BsChevronDown } from "react-icons/bs";
+import { Category } from "@/utils/types";
 
 const data: { id: number; name: string; url?: string; subMenu?: boolean }[] = [
   { id: 1, name: "Home", url: "/" },
   { id: 2, name: "About", url: "/about" },
   { id: 3, name: "Categories", subMenu: true },
   { id: 4, name: "Contact", url: "/contact" },
-];
-
-const subMenuData: { id: number; name: string; doc_count?: number }[] = [
-  { id: 1, name: "Jordan", doc_count: 11 },
-  { id: 2, name: "Sneakers", doc_count: 8 },
-  { id: 3, name: "Running shoes", doc_count: 64 },
-  { id: 4, name: "Football shoes", doc_count: 107 },
 ];
 
 const Menu = ({
@@ -23,7 +17,7 @@ const Menu = ({
 }: {
   showCatMenu: boolean;
   setShowCatMenu: (value: boolean) => void;
-  categories: any;
+  categories: Category[] | undefined;
 }) => {
   return (
     <ul className="hidden md:flex items-center gap-8 font-medium text-black">
@@ -41,37 +35,22 @@ const Menu = ({
 
                 {showCatMenu && (
                   <ul className="bg-white absolute top-6 left-0 min-w-[250px] px-1 py-1 text-black shadow-lg">
-                    {categories?.map(
-                      ({
-                        attributes: c,
-                        id,
-                      }: {
-                        attributes: {
-                          name: string;
-                          slug: string;
-                          products: { data: any[] };
-                        };
-                        id: string | number | undefined;
-                      }) => {
-                        return (
-                          <Link
-                            key={id}
-                            href={`/category/`}
-                            // href={`/category/${c.slug}`}
-                            onClick={() => setShowCatMenu(false)}
-                          >
-                            <li className="h-12 flex justify-between items-center px-3 hover:bg-black/[0.03] rounded-md">
-                              {/* {c.name}  */}
-                              Hola amigo
-                              <span className="opacity-50 text-sm">
-                                {/* {`(${c.products.data.length})`} */}
-                                12
-                              </span>
-                            </li>
-                          </Link>
-                        );
-                      }
-                    )}
+                    {categories?.map(({ attributes, id }: Category) => {
+                      return (
+                        <Link
+                          key={id}
+                          href={`/category/${attributes.slug}`}
+                          onClick={() => setShowCatMenu(false)}
+                        >
+                          <li className="h-12 flex justify-between items-center px-3 hover:bg-black/[0.03] rounded-md">
+                            {attributes.name}
+                            <span className="opacity-50 text-sm">
+                              {`(${attributes.products.data.length})`}
+                            </span>
+                          </li>
+                        </Link>
+                      );
+                    })}
                   </ul>
                 )}
               </li>
