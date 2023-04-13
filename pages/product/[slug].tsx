@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { IoMdHeartEmpty } from "react-icons/io";
 import ProductDetailsCarousel from "@/components/ProductDetailsCarousel";
 import RelatedProducts from "@/components/RelatedProducts";
+import { Product } from "@/utils/types";
 
 const ProductDetails = () => {
   return (
@@ -129,32 +130,36 @@ const ProductDetails = () => {
 
 export default ProductDetails;
 
-// export async function getStaticPaths() {
-//   const products = await fetchDataFromApi("/api/products?populate=*");
-//   const paths = products?.data?.map((p) => ({
-//     params: {
-//       slug: p.attributes.slug,
-//     },
-//   }));
+export async function getStaticPaths() {
+  const products = await fetchDataFromApi("/api/products?populate=*");
+  const paths = products?.data?.map((p: Product) => ({
+    params: {
+      slug: p.attributes.slug,
+    },
+  }));
 
-//   return {
-//     paths,
-//     fallback: false,
-//   };
-// }
+  return {
+    paths,
+    fallback: false,
+  };
+}
 
-// export async function getStaticProps({ params: { slug } }) {
-//   const product = await fetchDataFromApi(
-//     `/api/products?populate=*&filters[slug][$eq]=${slug}`
-//   );
-//   const products = await fetchDataFromApi(
-//     `/api/products?populate=*&[filters][slug][$ne]=${slug}`
-//   );
+export async function getStaticProps({
+  params: { slug },
+}: {
+  params: { slug: string };
+}) {
+  const product = await fetchDataFromApi(
+    `/api/products?populate=*&filters[slug][$eq]=${slug}`
+  );
+  const products = await fetchDataFromApi(
+    `/api/products?populate=*&[filters][slug][$ne]=${slug}`
+  );
 
-//   return {
-//     props: {
-//       product,
-//       products,
-//     },
-//   };
-// }
+  return {
+    props: {
+      product,
+      products,
+    },
+  };
+}
