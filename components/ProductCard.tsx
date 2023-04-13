@@ -2,7 +2,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-const ProductCard = () => {
+import { ProductAttributes } from "@/utils/types";
+const ProductCard = ({
+  data: { attributes, id },
+}: {
+  data: {
+    id: string | number | undefined;
+    attributes: ProductAttributes;
+  };
+}) => {
   return (
     <Link
       href={`/product/1`}
@@ -11,35 +19,29 @@ const ProductCard = () => {
       <Image
         width={500}
         height={500}
-        src={"/assets/p7.png"}
-        alt={"product=img"}
-        // alt={p.name}
+        src={attributes.thumbnail.data.attributes.url}
+        alt={attributes.name}
       />
       <div className="p-4 text-black/[0.9]">
-        <h2 className="text-lg font-medium">
-          Jordans
-          {/* {p.name} */}
-        </h2>
+        <h2 className="text-lg font-medium">{attributes.name}</h2>
         <div className="flex items-center text-black/[0.5]">
           <p className="mr-2 text-lg font-semibold">
             &#8377;
-            {/* {p.price} */}
-            300
+            {attributes.price}
           </p>
 
-          {/* {p.original_price && ( */}
-          <>
-            <p className="text-base  font-medium line-through">
-              &#8377;
-              {/* {p.original_price} */}
-              440
-            </p>
-            <p className="ml-auto text-base font-medium text-green-500">
-              30% off
-              {/* {getDiscountedPricePercentage(p.original_price, p.price)}% off */}
-            </p>
-          </>
-          {/* )} */}
+          {attributes.original_price && (
+            <>
+              <p className="text-base  font-medium line-through">
+                &#8377;
+                {attributes.original_price}
+              </p>
+              <p className="ml-auto text-base font-medium text-green-500">
+                30% off
+                {/* {getDiscountedPricePercentage(p.original_price, p.price)}% off */}
+              </p>
+            </>
+          )}
         </div>
       </div>
     </Link>
