@@ -1,46 +1,56 @@
+import { removeFromCart, updateCart } from "@/slices/cartSlice";
+import { AppDispatch } from "@/store/store";
 import Image from "next/image";
 import React from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { useDispatch } from "react-redux";
 
-const CartItem = () => {
+const CartItem = ({ product }: { product: any }) => {
+  const p = product.attributes;
+  const dispatch: AppDispatch = useDispatch();
+
+  const updateCartItem = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    key: string
+  ) => {
+    let payload = {
+      key,
+      val: key === "quantity" ? parseInt(e.target.value) : e.target.value,
+      id: product.id,
+    };
+    dispatch(updateCart(payload));
+  };
   return (
     <div className="flex py-5 gap-3 md:gap-5 border-b">
-      {/* IMAGE START */}
       <div className="shrink-0 aspect-square w-[50px] md:w-[120px]">
         <Image
-          src={"/assets/p1.png"}
-          alt={"namesofproduct"}
+          src={p.thumbnail.data.attributes.url}
+          alt={p.name + " image"}
           width={120}
           height={120}
         />
       </div>
-      {/* IMAGE END */}
-
       <div className="w-full flex flex-col">
         <div className="flex flex-col md:flex-row justify-between">
-          {/* PRODUCT TITLE */}
           <div className="text-lg md:text-2xl font-semibold text-black/[0.8]">
-            Jordan
-            {/* {p.name} */}
+            {p.name}
           </div>
 
           {/* PRODUCT SUBTITLE */}
           <div className="text-sm md:text-md font-medium text-black/[0.5] block md:hidden">
-            Comfy Jordies
-            {/* {p.subtitle} */}
+            {p.sub_name}
           </div>
 
           {/* PRODUCT PRICE */}
           <div className="text-sm md:text-md font-bold text-black/[0.5] mt-2">
-            MRP : &#8377;999
-            {/* {p.price} */}
+            MRP : &#8377;
+            {p.price}
           </div>
         </div>
 
         {/* PRODUCT SUBTITLE */}
         <div className="text-md font-medium text-black/[0.5] hidden md:block">
-          hola amigos
-          {/* {p.subtitle} */}
+          {p.sub_name}
         </div>
 
         <div className="flex items-center justify-between mt-4">
@@ -53,52 +63,41 @@ const CartItem = () => {
                 //     updateCartItem(e, "selectedSize")
                 // }
               >
-                {/* {p.size.data.map((item, i) => {
-                                    return (
-                                        <option
-                                            key={i}
-                                            value={item.size}
-                                            disabled={
-                                                !item.enabled ? true : false
-                                            }
-                                            selected={
-                                                data.selectedSize === item.size
-                                            }
-                                        >
-                                            {item.size}
-                                        </option>
-                                    );
-                                })} */}
+                {p.size.data.map(
+                  (item: any, i: number | string | undefined | null) => {
+                    return (
+                      <option
+                        key={i}
+                        value={item.size}
+                        disabled={!item.enabled ? true : false}
+                        selected={product.selectedSize === item.size}
+                      >
+                        {item.size}
+                      </option>
+                    );
+                  }
+                )}
               </select>
             </div>
 
             <div className="flex items-center gap-1">
               <div className="font-semibold">Quantity:</div>
               <select
-                className="hover:text-black"
-                // onChange={(e) => updateCartItem(e, "quantity")}
+                className="hover:text-black cursor-pointer"
+                onChange={(e) => updateCartItem(e, "quantity")}
               >
-                {/* {Array.from(
-                                    { length: 10 },
-                                    (_, i) => i + 1
-                                ).map((q, i) => {
-                                    return (
-                                        <option
-                                            key={i}
-                                            value={q}
-                                            selected={data.quantity === q}
-                                        >
-                                            {q}
-                                        </option>
-                                    );
-                                })} */}
+                {Array.from({ length: 10 }, (_, i) => i + 1).map((q, i) => {
+                  return (
+                    <option key={i} value={q} selected={product.quantity === q}>
+                      {q}
+                    </option>
+                  );
+                })}
               </select>
             </div>
           </div>
           <RiDeleteBin6Line
-            // onClick={() =>
-            //     dispatch(removeFromCart({ id: data.id }))
-            // }
+            onClick={() => dispatch(removeFromCart({ id: product.id }))}
             className="cursor-pointer text-black/[0.5] hover:text-black text-[16px] md:text-[20px]"
           />
         </div>
