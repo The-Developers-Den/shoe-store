@@ -5,10 +5,11 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { store } from "@/store/store";
 import { Provider } from "react-redux";
-import { createStore } from "@reduxjs/toolkit";
+import { persistStore } from "redux-persist";
+import { PersistGate } from "redux-persist/integration/react";
 
 export default function App({ Component, pageProps }: AppProps) {
-  // const myStore = createStore(store);
+  const persistor = persistStore(store);
 
   return (
     <>
@@ -21,9 +22,11 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="preconnect" href="https://fonts.gstatic.com" />
       </Head>
       <Provider store={store}>
-        <Header />
-        <Component {...pageProps} />
-        <Footer />
+        <PersistGate persistor={persistor}>
+          <Header />
+          <Component {...pageProps} />
+          <Footer />
+        </PersistGate>
       </Provider>
     </>
   );
