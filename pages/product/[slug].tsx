@@ -2,11 +2,15 @@ import React, { useState } from "react";
 import { IoMdHeartEmpty } from "react-icons/io";
 import ProductDetailsCarousel from "@/components/ProductDetailsCarousel";
 import RelatedProducts from "@/components/RelatedProducts";
-import { Product, ProductAttributes } from "@/utils/types";
+import { Product } from "@/utils/types";
+import { useSelector, useDispatch } from "react-redux";
 import ReactMarkdown from "react-markdown";
+import { addToCart } from "@/slices/cartSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { fetchDataFromApi } from "@/utils/api";
 import { getDiscountedPricePercentage } from "@/utils/helper";
-import { data } from "autoprefixer";
+import { AppDispatch } from "@/store/store";
 
 const ProductDetails = ({
   product,
@@ -16,14 +20,29 @@ const ProductDetails = ({
     data: [Product];
   };
   products: {
-    data: [Product[]];
+    data: Product[];
   };
 }) => {
   const [selectedSize, setSelectedSize] = useState();
   const [showError, setShowError] = useState(false);
   const p = product?.data?.[0].attributes;
+  const dispatch: AppDispatch = useDispatch();
+
+  const notify = () => {
+    toast.success("Success. Item Added to cart!", {
+      position: "bottom-right",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+  };
   return (
     <div className="w-full md:py-20">
+      <ToastContainer />
       <div className="w-full max-w-[1280px] px-5 md:px-10 mx-auto">
         <div className="flex flex-col lg:flex-row md:px-10 gap-[50px] lg:gap-[100px]">
           {/* left column start */}
@@ -79,22 +98,30 @@ const ProductDetails = ({
 
               {/* SIZE START */}
               <div id="sizesGrid" className="grid grid-cols-3 gap-2">
-                {p.size.data.map((item, i) => (
-                  <div
-                    key={i}
-                    className={`border rounded-md text-center py-3 font-medium ${
-                      item.enabled
-                        ? "hover:border-black cursor-pointer"
-                        : "cursor-not-allowed bg-black/[0.1] opacity-50"
-                    } ${selectedSize === item.size ? "border-black" : ""}`}
-                    onClick={() => {
-                      setSelectedSize(item.size);
-                      setShowError(false);
-                    }}
-                  >
-                    {item.size}
-                  </div>
-                ))}
+                {p.size.data.map(
+                  (
+                    item: {
+                      enabled: boolean;
+                      size: any;
+                    },
+                    i: React.Key | null | undefined
+                  ) => (
+                    <div
+                      key={i}
+                      className={`border rounded-md text-center py-3 font-medium ${
+                        item.enabled
+                          ? "hover:border-black cursor-pointer"
+                          : "cursor-not-allowed bg-black/[0.1] opacity-50"
+                      } ${selectedSize === item.size ? "border-black" : ""}`}
+                      onClick={() => {
+                        setSelectedSize(item.size);
+                        setShowError(false);
+                      }}
+                    >
+                      {item.size}
+                    </div>
+                  )
+                )}
               </div>
               {/* SIZE END */}
 
@@ -109,7 +136,27 @@ const ProductDetails = ({
             {/* PRODUCT SIZE RANGE END */}
 
             {/* ADD TO CART BUTTON START */}
-            <button className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 hover:scale-95 mb-3 hover:opacity-75">
+            <button
+              className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 hover:scale-95 mb-3 hover:opacity-75"
+              onClick={() => {
+                if (!selectedSize) {
+                  setShowError(true);
+                  document.getElementById("sizesGrid")!.scrollIntoView({
+                    block: "center",
+                    behavior: "smooth",
+                  });
+                } else {
+                  dispatch(
+                    addToCart({
+                      ...product?.data?.[0],
+                      selectedSize,
+                      oneQuantityPrice: p.price,
+                    })
+                  );
+                  notify();
+                }
+              }}
+            >
               Add to Cart
             </button>
             {/* ADD TO CART BUTTON END */}

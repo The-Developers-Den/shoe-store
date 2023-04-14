@@ -7,6 +7,7 @@ export interface ProductAttributes {
   original_price: number;
   size: {
     data: {
+      map: any;
       size: string;
       enabled: boolean;
     };
