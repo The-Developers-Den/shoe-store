@@ -32,16 +32,22 @@ Getting Started
 
 1.  Clone the repository:
 
-    `git clone https://github.com/The-Developers-Den/shoe-store.git
-    cd shoe-store`
+    ```
+    git clone https://github.com/The-Developers-Den/shoe-store.git
+    cd shoe-store
+    ```
 
 2.  Install the dependencies:
 
-    `yarn install`
+    ```
+    yarn install
+    ```
 
     or
 
-    `npm install`
+    ```
+    npm install
+    ```
 
 3.  Set up the environment variables:
 
@@ -50,15 +56,21 @@ Getting Started
     -   Add the following variables and replace the placeholders with your own values:
 
 
-        `NEXT_PUBLIC_STRAPI_API_TOKEN=<STRAPI_API_URL>
-        STRIPE_PUBLIC_KEY=<STRIPE_PUBLIC_KEY>`
+        ```
+        NEXT_PUBLIC_STRAPI_API_TOKEN=<STRAPI_API_URL>
+        STRIPE_PUBLIC_KEY=<STRIPE_PUBLIC_KEY>
+        ```
 
 4.  Start the development server:
 
-    `yarn dev`
+    ```
+    yarn dev
+    ```
 
     or
 
-    `npm run dev`
+    ```
+    npm run dev
+    ```
 
 5.  Open your browser and navigate to `http://localhost:3000`.
