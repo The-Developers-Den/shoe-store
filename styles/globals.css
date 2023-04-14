@@ -107,7 +107,7 @@ body::-webkit-scrollbar {
 }
 /* PRODUCT DETAILS CAROUSEL STYLING CUSTOMIZATION END */
 
-/* .markdown ul {
+.markdown ul {
   margin: 0;
   padding: 0;
   list-style-type: disc;
@@ -115,4 +115,4 @@ body::-webkit-scrollbar {
 }
 .markdown ul li {
   margin: 10px 0;
-} */
+}

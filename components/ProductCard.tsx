@@ -2,13 +2,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { Category, Product } from "@/utils/types";
+import { Product } from "@/utils/types";
 import { getDiscountedPricePercentage } from "@/utils/helper";
 
 const ProductCard = ({ data }: { data: Product }) => {
   return (
     <Link
-      href={`/product/1`}
+      href={`/product/${data?.attributes.product_id}`}
       className="transform overflow-hidden bg-white duration-200 hover:scale-105 cursor-pointer"
     >
       <Image

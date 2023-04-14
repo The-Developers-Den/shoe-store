@@ -1,6 +1,5 @@
 export interface ProductAttributes {
   name: string;
-  slug: string;
   description: string;
   sub_name: string;
   price: number;

@@ -2,49 +2,61 @@ import React, { useState } from "react";
 import { IoMdHeartEmpty } from "react-icons/io";
 import ProductDetailsCarousel from "@/components/ProductDetailsCarousel";
 import RelatedProducts from "@/components/RelatedProducts";
-import { Product } from "@/utils/types";
+import { Product, ProductAttributes } from "@/utils/types";
+import ReactMarkdown from "react-markdown";
+import { fetchDataFromApi } from "@/utils/api";
+import { getDiscountedPricePercentage } from "@/utils/helper";
+import { data } from "autoprefixer";
 
-const ProductDetails = () => {
+const ProductDetails = ({
+  product,
+  products,
+}: {
+  product: {
+    data: [Product];
+  };
+  products: {
+    data: [Product[]];
+  };
+}) => {
+  const [selectedSize, setSelectedSize] = useState();
+  const [showError, setShowError] = useState(false);
+  const p = product?.data?.[0].attributes;
   return (
     <div className="w-full md:py-20">
       <div className="w-full max-w-[1280px] px-5 md:px-10 mx-auto">
         <div className="flex flex-col lg:flex-row md:px-10 gap-[50px] lg:gap-[100px]">
           {/* left column start */}
           <div className="w-full md:w-auto flex-[1.5] max-w-[500px] lg:max-w-full mx-auto lg:mx-0">
-            <ProductDetailsCarousel />
+            <ProductDetailsCarousel images={p.image.data} />
           </div>
 
           <div className="flex-[1] py-3">
-            {/* PRODUCT TITLE */}
             <div className="text-[34px] font-semibold mb-2 leading-tight">
-              Jordans
-              {/* {p.name} */}
+              {p.name}
             </div>
 
             {/* PRODUCT SUBTITLE */}
-            <div className="text-lg font-semibold mb-5">
-              Comfy Jordan{/* {p.subtitle} */}
-            </div>
+            <div className="text-lg font-semibold mb-5">{p.sub_name}</div>
 
             {/* PRODUCT PRICE */}
             <div className="flex items-center">
               <p className="mr-2 text-lg font-semibold">
-                MRP : &#8377;999
-                {/* {p.price} */}
+                MRP : &#8377;
+                {p.price}
               </p>
-              {/* {p.original_price && ( */}
-              <>
-                <p className="text-base  font-medium line-through">
-                  &#8377;453
-                  {/* {p.original_price} */}
-                </p>
-                <p className="ml-auto text-base font-medium text-green-500">
-                  7%
-                  {/* {getDiscountedPricePercentage(p.original_price, p.price)}% */}
-                  off
-                </p>
-              </>
-              {/* )} */}
+              {p.original_price && (
+                <>
+                  <p className="text-base  font-medium line-through">
+                    &#8377;
+                    {p.original_price}
+                  </p>
+                  <p className="ml-auto text-base font-medium text-green-500">
+                    {getDiscountedPricePercentage(p.original_price, p.price)}%
+                    off
+                  </p>
+                </>
+              )}
             </div>
 
             <div className="text-md font-medium text-black/[0.5]">
@@ -67,7 +79,7 @@ const ProductDetails = () => {
 
               {/* SIZE START */}
               <div id="sizesGrid" className="grid grid-cols-3 gap-2">
-                {/* {p.size.data.map((item, i) => (
+                {p.size.data.map((item, i) => (
                   <div
                     key={i}
                     className={`border rounded-md text-center py-3 font-medium ${
@@ -82,16 +94,16 @@ const ProductDetails = () => {
                   >
                     {item.size}
                   </div>
-                ))} */}
+                ))}
               </div>
               {/* SIZE END */}
 
               {/* SHOW ERROR START */}
-              {/* {showError && ( */}
-              <div className="text-red-600 mt-1">
-                Size selection is required
-              </div>
-              {/* )} */}
+              {showError && (
+                <div className="text-red-600 mt-1">
+                  Size selection is required
+                </div>
+              )}
               {/* SHOW ERROR END */}
             </div>
             {/* PRODUCT SIZE RANGE END */}
@@ -112,17 +124,14 @@ const ProductDetails = () => {
             <div>
               <div className="text-lg font-bold mb-5">Product Details</div>
               <div className="markdown text-md mb-5">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae
-                inventore quis ea amet atque vel illo tempore excepturi quasi
-                aperiam. Quae inventore quis ea amet atque vel illo tempore
-                excepturi quasi aperiam.
+                <ReactMarkdown>{p.description}</ReactMarkdown>
               </div>
             </div>
           </div>
           {/* right column end */}
         </div>
 
-        <RelatedProducts />
+        <RelatedProducts products={products.data} />
       </div>
     </div>
   );
@@ -134,7 +143,7 @@ export async function getStaticPaths() {
   const products = await fetchDataFromApi("/api/products?populate=*");
   const paths = products?.data?.map((p: Product) => ({
     params: {
-      slug: p.attributes.slug,
+      slug: p.attributes.product_id,
     },
   }));
 
@@ -150,10 +159,10 @@ export async function getStaticProps({
   params: { slug: string };
 }) {
   const product = await fetchDataFromApi(
-    `/api/products?populate=*&filters[slug][$eq]=${slug}`
+    `/api/products?populate=*&filters[product_id][$eq]=${slug}`
   );
   const products = await fetchDataFromApi(
-    `/api/products?populate=*&[filters][slug][$ne]=${slug}`
+    `/api/products?populate=*&[filters][product_id][$ne]=${slug}`
   );
 
   return {
